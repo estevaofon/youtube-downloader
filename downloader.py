@@ -14,13 +14,6 @@ class Downloader(tk.Tk):
         self.title('YouTube Downloader')
         self.geometry('500x150')
 
-        # Style
-        self.style = ttk.Style()
-        self.style.theme_use('vista')
-        self.style.configure('TLabel', font=('Arial', 12))
-        self.style.configure('TEntry', font=('Arial', 12))
-        self.style.configure('TButton', font=('Arial', 12))
-
         # UI Elements
         self.url_frame = ttk.Frame(self)
         self.url_label = ttk.Label(self.url_frame, text="YouTube URL:")
@@ -35,6 +28,7 @@ class Downloader(tk.Tk):
 
         self.loading_label = ttk.Label(self.option_frame, text="")
 
+        # Progressbar: initially hidden
         self.progress = ttk.Progressbar(self, length=400, mode='determinate')
 
         # Pack layout
@@ -47,8 +41,6 @@ class Downloader(tk.Tk):
         self.radio_mp4.pack(side=tk.LEFT)
         self.download_button.pack(side=tk.LEFT)
         self.loading_label.pack(side=tk.LEFT)
-
-        self.progress.pack(pady=10)
 
     def progress_func(self, stream, chunk, bytes_remaining):
         total_size = stream.filesize
@@ -66,6 +58,9 @@ class Downloader(tk.Tk):
             return
 
         self.progress['value'] = 0
+
+        # Repack progress bar when download starts
+        self.progress.pack(pady=10)
 
         if option == 'mp4':
             self.thread = threading.Thread(target=self.download_video, args=(url,))
@@ -118,6 +113,7 @@ class Downloader(tk.Tk):
             self.url_entry.config(state='normal')
             self.download_button.config(state='normal')
             self.loading_label.config(text='')
+            self.progress.pack_forget()  # Unpack progress bar when download is done
 
     def download_audio(self, url):
         try:
@@ -153,6 +149,7 @@ class Downloader(tk.Tk):
             self.url_entry.config(state='normal')
             self.download_button.config(state='normal')
             self.loading_label.config(text='')
+            self.progress.pack_forget()  # Unpack progress bar in case of an error
 
 
 if __name__ == "__main__":
