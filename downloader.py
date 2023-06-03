@@ -5,6 +5,7 @@ import threading
 import os
 from moviepy.editor import VideoFileClip, AudioFileClip
 import itertools
+from pathvalidate import sanitize_filename
 
 
 class Downloader(tk.Tk):
@@ -101,7 +102,7 @@ class Downloader(tk.Tk):
             self.loading_label.config(text=loading_text + next(loading_animation))
             self.after(200, animate_loading)
 
-            final_clip.write_videofile('final.mp4')
+            final_clip.write_videofile(sanitize_filename(yt.title + '.mp4'))
 
             os.remove(video_file)
             os.remove(audio_file)
