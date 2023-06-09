@@ -3,3 +3,5 @@
 moviepy==1.0.3
 
 pytube==15.0.0
+
+pathvalidate==3.0.0
